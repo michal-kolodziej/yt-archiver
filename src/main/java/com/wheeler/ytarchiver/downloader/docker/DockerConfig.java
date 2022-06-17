@@ -23,7 +23,7 @@ public class DockerConfig {
 
     private static final String DOWNLOADER_DOCKER_IMAGE_NAME = "mikenye/youtube-dl";
 
-    @Value("${downloader.docker.target.directory}")
+    @Value("${downloader.docker.download.directory}")
     private final String targetDirectory;
 
     @Bean

@@ -1,36 +1,39 @@
 package com.wheeler.ytarchiver.downloader.docker.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
 public class ContainerExecutionService {
-
+    private static final Long SUCCESS_EXIT_CODE = 0L;
     private final DockerClient dockerClient;
 
-    public ContainerExecutionResult runContainer(String containerId) {
+    public void runContainer(String containerId) {
         dockerClient.startContainerCmd(containerId).exec();
         waitForContainerToExit(containerId);
-        ContainerExecutionResult executionResult = getExecutionResult(containerId);
-        //CompletableFuture.runAsync(() -> removeContainer(containerId));
-        return executionResult;
+        checkExecutionSuccessful(containerId);
+        CompletableFuture.runAsync(() -> removeContainer(containerId));
     }
 
-    private ContainerExecutionResult getExecutionResult(String containerId) {
+    private void checkExecutionSuccessful(String containerId) {
         InspectContainerResponse.ContainerState containerState = getContainerState(containerId);
-        return new ContainerExecutionResult(containerState.getExitCodeLong(), getDockerLogs(containerId));
+        Long exitCode = containerState.getExitCodeLong();
+        List<String> logMessages = getDockerLogs(containerId);
+        if (!Objects.equals(exitCode, SUCCESS_EXIT_CODE)) {
+            throw new RuntimeException("Got unexpected error code: " + exitCode + ", docker logs: " + String.join("\n", logMessages));
+        }
     }
 
     @SneakyThrows

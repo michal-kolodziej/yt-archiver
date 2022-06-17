@@ -1,18 +1,18 @@
 package com.wheeler.ytarchiver;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Objects;
-
-import org.junit.jupiter.api.Assertions;
+import com.wheeler.ytarchiver.downloader.DownloadResult;
+import com.wheeler.ytarchiver.downloader.DownloadService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.wheeler.ytarchiver.downloader.DownloadResult;
-import com.wheeler.ytarchiver.downloader.DownloadService;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class YtArchiverApplicationTests {
@@ -20,7 +20,7 @@ class YtArchiverApplicationTests {
     @Autowired
     private DownloadService downloadService;
 
-    @Value("${downloader.docker.target.directory}")
+    @Value("${downloader.docker.download.directory}")
     private String downloadDirectory;
 
     @Test
@@ -38,8 +38,7 @@ class YtArchiverApplicationTests {
         DownloadResult downloadResult = downloadService.downloadVideo(urlToDownload);
 
         //then
-        Assertions.assertTrue(downloadResult.isSuccessful());
-        Assertions.assertEquals(1, targetDirectory.listFiles().length);
+        assertEquals(1, targetDirectory.listFiles().length);
     }
 
     private void dirClear(String path) throws IOException {
