@@ -1,4 +1,4 @@
-package com.wheeler.ytarchiver;
+package com.wheeler.ytarchiver.downloader;
 
 import com.wheeler.ytarchiver.downloader.DownloadResult;
 import com.wheeler.ytarchiver.downloader.DownloadService;

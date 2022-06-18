@@ -1,0 +1,2 @@
+- `/` and `/home/` redirects to download page view
+- endpoint `/download/mp3?url=<URL HERE>` is used to download video
