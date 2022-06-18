@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>Downloader</title>
+    <style>
+    .error {
+        color: red;
+    }
+    </style>
+</head>
+<body>
+<form th:action="@{/download}" th:method="post" th:object="${downloadFormData}">
+    <input th:field="*{url}" type="text">
+    <button type="submit">Download</button>
+    <select name="format" disabled="disabled">
+        <option value="mp3">mp3</option>
+    </select>
+</form>
+<div id="errorContainer" th:if="${(param.error != null)}">
+    <p class="error" th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>
+</div>
+</body>
+</html>
