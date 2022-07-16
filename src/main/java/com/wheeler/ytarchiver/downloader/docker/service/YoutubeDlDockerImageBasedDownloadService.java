@@ -13,40 +13,63 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @Component
 @RequiredArgsConstructor
 public class YoutubeDlDockerImageBasedDownloadService implements DownloadService {
 
-    private final CreateContainerCmd createContainerCmd;
+    private final CreateContainerCmd createContainerCmdWithBasicConfig;
     private final ContainerExecutionService containerExecutionService;
 
     @Value("${downloader.docker.download.directory}")
     private final String downloadDirectory;
 
-    public DownloadResult downloadVideo(String url) throws IOException {
-        String downloadId = UUID.randomUUID().toString();
-        String filenameFormat = downloadId + "%(title)s.%(ext)s";
+    public DownloadResult getMp3(String url) {
+        var fileInfoResolver = createFileInfoResolver();
+        return downloadInternal(fileInfoResolver, DownloadConfigFactory.forMp3(url, fileInfoResolver.getFilenameFormat()));
+    }
 
-        CreateContainerResponse createdContainer = createContainerCmd
-                .withCmd(url, "--extract-audio", "--audio-format", "mp3", "--output", filenameFormat).exec();
+    public DownloadResult getMp4(String url) {
+        var fileInfoResolver = createFileInfoResolver();
+        return downloadInternal(fileInfoResolver, DownloadConfigFactory.forMp4(url, fileInfoResolver.getFilenameFormat()));
+    }
+
+    private DownloadResult downloadInternal(StartsWithDownloadIdFileInfoResolver fileInfoResolver, String[] downloadConfig) {
+        CreateContainerResponse createdContainer = createContainerCmdWithBasicConfig
+                .withCmd(downloadConfig).exec();
         containerExecutionService.runContainer(createdContainer.getId());
 
-        var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadId, downloadDirectory);
         Path downloadedFilePath = Paths.get(fileInfoResolver.getFilePath());
-        byte[] fileBytes = Files.readAllBytes(downloadedFilePath);
-
+        byte[] fileBytes = readBytes(downloadedFilePath);
         CompletableFuture.runAsync(() -> deleteFile(downloadedFilePath));
         return new DownloadResult(fileBytes, fileInfoResolver.getFilename());
+    }
+
+    private byte[] readBytes(Path downloadedFilePath) {
+        try {
+            return Files.readAllBytes(downloadedFilePath);
+        } catch (IOException e) {
+            //TODO: could use some wrapper exception to get handled more elegantly
+            throw new RuntimeException("Unable to open downloaded file at: " + downloadedFilePath);
+        }
+    }
+
+    private StartsWithDownloadIdFileInfoResolver createFileInfoResolver() {
+        try {
+            return new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
+        } catch (IOException e) {
+            //TODO: could use some wrapper exception to get handled more elegantly
+            throw new RuntimeException("Unable to open downloadDirectory: " + downloadDirectory);
+        }
     }
 
     private void deleteFile(Path downloadedFilePath) {
         try {
             Files.delete(downloadedFilePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            //TODO: could use some wrapper exception to get handled more elegantly
+            throw new RuntimeException("Unable to open downloadDirectory: " + downloadDirectory);
         }
     }
 }

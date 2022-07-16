@@ -1,4 +1,4 @@
-package com.wheeler.ytarchiver.home;
+package com.wheeler.ytarchiver.homepage;
 
 import com.google.common.base.Strings;
 import org.springframework.stereotype.Controller;
@@ -22,16 +22,25 @@ public class HomeController {
         return "home";
     }
 
-    @PostMapping("/download")
-    public String download(DownloadFormData downloadFormData) {
-        if (!isValidUrl(downloadFormData.getUrl())) {
+    @PostMapping("/download/mp3")
+    public String downloadMp3(DownloadFormData downloadFormData) {
+        if (isUrlInvalid(downloadFormData.getUrl())) {
             return "redirect:/home?error=INVALID_URL";
         }
 
         return "redirect:/download/mp3?url=" + downloadFormData.getUrl();
     }
 
-    private boolean isValidUrl(String url) {
-        return !Strings.isNullOrEmpty(url);
+    @PostMapping("/download/mp4")
+    public String downloadMp4(DownloadFormData downloadFormData) {
+        if (isUrlInvalid(downloadFormData.getUrl())) {
+            return "redirect:/home?error=INVALID_URL";
+        }
+
+        return "redirect:/download/mp4?url=" + downloadFormData.getUrl();
+    }
+
+    private boolean isUrlInvalid(String url) {
+        return Strings.isNullOrEmpty(url);
     }
 }

@@ -3,26 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>Downloader</title>
-    <style>
-    .error {
-        color: red;
-    }
-  </style>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
-<div class="d-flex justify-content-center mt-1">
-    <form th:action="@{/download}" th:method="post" th:object="${downloadFormData}">
-        <input th:field="*{url}" type="text">
-        <button type="submit">Download</button>
-        <select name="format" disabled="disabled">
-            <option value="mp3">mp3</option>
-        </select>
+<div class="d-flex justify-content-center mt-1 pb-2">
+    <form th:method="post" th:object="${downloadFormData}">
+        <!--        <div class="alert alert-danger" id="errorContainer" th:if="${(param.error != null)}">-->
+        <!--            <p th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>-->
+        <!--        </div>-->
+
+        <div class="form-group mb-2">
+            <label for="videoUrlInput">Video URL</label>
+            <input th:field="*{url}" type="text" class="form-control" id="videoUrlInput" aria-describedby="emailHelp"
+                   placeholder="Enter video URL">
+        </div>
+
+        <button class="btn btn-primary" th:formaction="@{/download/mp3}" type="submit">Download audio</button>
+        <button class="btn btn-primary" th:formaction="@{/download/mp4}" type="submit">Download video</button>
     </form>
 </div>
-<div class="d-flex justify-content-center" id="errorContainer" th:if="${(param.error != null)}">
-    <p class="error" th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>
-</div>
+
 </body>
 </html>

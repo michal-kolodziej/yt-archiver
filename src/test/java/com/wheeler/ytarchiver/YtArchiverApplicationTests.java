@@ -7,12 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class YtArchiverApplicationTests {
@@ -28,25 +23,15 @@ class YtArchiverApplicationTests {
     }
 
     @Test
-    void downloadDirectoryNotEmptyAfterDownload() throws IOException {
+    void downloadService_getMp3_returns_notEmpty_bytes() {
         //given
         String urlToDownload = "https://www.youtube.com/watch?v=tPEE9ZwTmy0";
-        File targetDirectory = Paths.get(downloadDirectory).toFile();
 
         //when
-        dirClear(downloadDirectory);
-        DownloadResult downloadResult = downloadService.downloadVideo(urlToDownload);
+        DownloadResult downloadResult = downloadService.getMp3(urlToDownload);
 
         //then
-        assertEquals(1, targetDirectory.listFiles().length);
-    }
-
-    private void dirClear(String path) throws IOException {
-        File targetDirectory = Paths.get(path).toFile();
-        if (!targetDirectory.isDirectory()) throw new IOException("file: '" + path + "' is not a directory");
-        File[] files = Objects.requireNonNull(targetDirectory.listFiles());
-        for (File file : files)
-            if (!file.isDirectory()) file.delete();
+        assertTrue(downloadResult.getBytes().length > 0);
     }
 
 }
