@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="d-flex justify-content-center mt-1 pb-2">
-    <form th:method="post" th:object="${downloadFormData}">
+    <form th:method="get" th:object="${downloadFormData}">
         <!--        <div class="alert alert-danger" id="errorContainer" th:if="${(param.error != null)}">-->
         <!--            <p th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>-->
         <!--        </div>-->
@@ -20,8 +20,8 @@
                    placeholder="Enter video URL">
         </div>
 
-        <button class="btn btn-primary" th:formaction="@{/download/mp3}" type="submit">Download audio</button>
-        <button class="btn btn-primary" th:formaction="@{/download/mp4}" type="submit">Download video</button>
+        <button class="btn btn-primary" th:formaction="@{/api/download/mp3}" type="submit">Download audio</button>
+        <button class="btn btn-primary" th:formaction="@{/api/download/mp4}" type="submit">Download video</button>
     </form>
 </div>
 
