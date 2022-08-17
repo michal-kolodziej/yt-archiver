@@ -18,7 +18,7 @@ public class ProcessCommandFactory {
     }
 
     public String[] forMp4(String url, String filenameFormat) {
-        return new String[]{url, "--output", filenameFormat, "--format", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"};
+        return new String[]{binaryPath, url, "--output", filenameFormat, "-S", "ext:mp4:m4a", "--format", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"};
     }
 
 

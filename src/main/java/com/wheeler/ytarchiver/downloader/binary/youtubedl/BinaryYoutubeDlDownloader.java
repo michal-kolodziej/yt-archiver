@@ -4,6 +4,7 @@ import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
 import com.wheeler.ytarchiver.downloader.Downloader;
 import com.wheeler.ytarchiver.downloader.StartsWithDownloadIdFileInfoResolver;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class BinaryYoutubeDlDownloader implements Downloader {
 
     private final ProcessCommandFactory processCommandFactory;
@@ -38,6 +40,7 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     }
 
     private ProcessBuilder buildProcess(String[] args) {
+        log.info("Building process with args: {}", (Object) args);
         ProcessBuilder pb = new ProcessBuilder(args);
         pb.redirectErrorStream(true);
         return pb;
