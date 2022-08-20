@@ -10,9 +10,9 @@
 <body>
 <div class="d-flex justify-content-center mt-1 pb-2">
     <form th:method="post" th:object="${downloadFormData}">
-        <!--        <div class="alert alert-danger" id="errorContainer" th:if="${(param.error != null)}">-->
-        <!--            <p th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>-->
-        <!--        </div>-->
+                <div class="alert alert-danger" id="errorContainer" th:if="${(param.error != null)}">
+                    <p th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>
+                </div>
 
         <div class="form-group mb-2">
             <label for="videoUrlInput">Video URL</label>

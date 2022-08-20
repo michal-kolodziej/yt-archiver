@@ -4,6 +4,13 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Formats supported by app ###
+*.mp4
+*.m4a
+*.mp3
+
+src/main/resources/downloaded/*
+
 ### STS ###
 .apt_generated
 .classpath

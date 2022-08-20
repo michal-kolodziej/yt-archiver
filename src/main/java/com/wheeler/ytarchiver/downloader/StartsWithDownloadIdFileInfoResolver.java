@@ -1,42 +1,43 @@
 package com.wheeler.ytarchiver.downloader;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-//TODO: some refactoring as i feel this class does too much.
-// it probably shouldn't be responsible for generating downloadId
+//TODO: some refactoring as i feel this class sucks -.-
 public class StartsWithDownloadIdFileInfoResolver {
     private final String downloadId;
     private final String downloadDirectory;
 
-    private String filename;
-    private String filePath;
+    private File file;
 
     private boolean isResolved = false;
 
-    public StartsWithDownloadIdFileInfoResolver(String downloadDirectory) throws IOException {
+    public StartsWithDownloadIdFileInfoResolver(String downloadDirectory) {
         this.downloadDirectory = Objects.requireNonNull(downloadDirectory);
         this.downloadId = UUID.randomUUID().toString();
     }
 
-    public String getFilenameFormat() {
-        return downloadId + "%(title)s.%(ext)s";
+    public DownloadedFileInfo getFileInfo() {
+        return new DownloadedFileInfo(getFile(), getOutputFilename());
     }
 
-    public String getFilename() {
+    public String getOutputFormat() {
+        return downloadDirectory + downloadId + "%(title)s.%(ext)s";
+    }
+
+    private String getOutputFilename() {
         resolve();
         // Filename returned to the user will be downloaded file name with downloadId removed
         // so "f18308ac-0290-4a93-a670-078eaa2c5591VIDEO NAME.mp3" will become "VIDEO NAME.mp3"
-        return filename.substring(downloadId.length());
+        return file.getName().substring(downloadId.length());
     }
 
-    public String getFilePath() {
+    private File getFile() {
         resolve();
-        return filePath;
+        return file;
     }
 
     private void resolve() {
@@ -47,8 +48,7 @@ public class StartsWithDownloadIdFileInfoResolver {
                 .orElseThrow(() -> new RuntimeException("File with downloadId: " + downloadId + " is not present in directory: " + downloadDirectory));
 
         this.isResolved = true;
-        this.filename = downloadedFile.getName();
-        this.filePath = downloadedFile.getPath();
+        this.file = downloadedFile;
     }
 
     private File[] getFilesInDirectory(String downloadDirectory) {

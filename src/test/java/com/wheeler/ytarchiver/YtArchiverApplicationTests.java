@@ -1,11 +1,14 @@
 package com.wheeler.ytarchiver;
 
-import com.wheeler.ytarchiver.downloader.DownloadResult;
-import com.wheeler.ytarchiver.downloader.DownloadService;
+import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
+import com.wheeler.ytarchiver.downloader.Downloader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -13,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class YtArchiverApplicationTests {
 
     @Autowired
-    private DownloadService downloadService;
+    private Downloader downloader;
 
-    @Value("${downloader.docker.download.directory}")
+    @Value("${downloader.binary.download.directory}")
     private String downloadDirectory;
 
     @Test
@@ -28,10 +31,16 @@ class YtArchiverApplicationTests {
         String urlToDownload = "https://www.youtube.com/watch?v=tPEE9ZwTmy0";
 
         //when
-        DownloadResult downloadResult = downloadService.getMp3(urlToDownload);
+        DownloadedFileInfo downloadedFileInfo = downloader.getMp3(urlToDownload);
 
         //then
-        assertTrue(downloadResult.getBytes().length > 0);
+        try {
+            FileInputStream fileInputStream = new FileInputStream(downloadedFileInfo.getFile());
+            assertTrue(fileInputStream.available() > 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
