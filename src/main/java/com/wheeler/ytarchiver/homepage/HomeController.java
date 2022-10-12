@@ -28,7 +28,7 @@ public class HomeController {
             return "redirect:/home?error=INVALID_URL";
         }
 
-        return "redirect:/download/mp3?url=" + downloadFormData.getUrl();
+        return "redirect:/api/download/mp3?url=" + downloadFormData.getUrl();
     }
 
     @PostMapping("/download/mp4")
@@ -37,7 +37,7 @@ public class HomeController {
             return "redirect:/home?error=INVALID_URL";
         }
 
-        return "redirect:/download/mp4?url=" + downloadFormData.getUrl();
+        return "redirect:/api/download/mp4?url=" + downloadFormData.getUrl();
     }
 
     private boolean isUrlInvalid(String url) {
