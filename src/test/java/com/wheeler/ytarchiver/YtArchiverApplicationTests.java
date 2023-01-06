@@ -1,6 +1,6 @@
 package com.wheeler.ytarchiver;
 
-import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
+import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
 import com.wheeler.ytarchiver.downloader.Downloader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +31,11 @@ class YtArchiverApplicationTests {
         String urlToDownload = "https://www.youtube.com/watch?v=tPEE9ZwTmy0";
 
         //when
-        DownloadedFileInfo downloadedFileInfo = downloader.getMp3(urlToDownload);
+        DownloadedFile downloadedFile = downloader.getMp3(urlToDownload);
 
         //then
         try {
-            FileInputStream fileInputStream = new FileInputStream(downloadedFileInfo.getFile());
+            FileInputStream fileInputStream = new FileInputStream(downloadedFile.getFile());
             assertTrue(fileInputStream.available() > 0);
         } catch (IOException e) {
             e.printStackTrace();

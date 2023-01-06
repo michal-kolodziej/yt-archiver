@@ -1,6 +1,5 @@
 package com.wheeler.ytarchiver.downloader.binary.youtubedl;
 
-import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
 import com.wheeler.ytarchiver.downloader.Downloader;
 import com.wheeler.ytarchiver.downloader.StartsWithDownloadIdFileInfoResolver;
 import lombok.RequiredArgsConstructor;
@@ -16,23 +15,27 @@ import java.io.IOException;
 public class BinaryYoutubeDlDownloader implements Downloader {
 
     private final ProcessCommandFactory processCommandFactory;
+    private final VideoQualityService videoQualityService;
 
     @Value("${downloader.binary.download.directory}")
     private final String downloadDirectory;
 
     @Override
-    public DownloadedFileInfo getMp3(String url) {
+    public DownloadedFile getMp3(String url) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
         return downloadInternal(processCommandFactory.forMp3(url, fileInfoResolver.getOutputFormat()), fileInfoResolver);
     }
 
     @Override
-    public DownloadedFileInfo getMp4(String url) {
+    public DownloadedFile getMp4(String url, String selectedQuality) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
-        return downloadInternal(processCommandFactory.forMp4(url, fileInfoResolver.getOutputFormat()), fileInfoResolver);
+        String[] processCommand = processCommandFactory.forMp4(url,
+                fileInfoResolver.getOutputFormat(),
+                videoQualityService.getFormatForQuality(selectedQuality));
+        return downloadInternal(processCommand, fileInfoResolver);
     }
 
-    private DownloadedFileInfo downloadInternal(String[] args, StartsWithDownloadIdFileInfoResolver fileInfoResolver) {
+    private DownloadedFile downloadInternal(String[] args, StartsWithDownloadIdFileInfoResolver fileInfoResolver) {
         var processBuilder = buildProcess(args);
         var downloaderProcess = runProcess(processBuilder);
         waitForProcessToFinish(downloaderProcess);

@@ -1,7 +1,9 @@
 package com.wheeler.ytarchiver.downloader;
 
-public interface Downloader {
-    DownloadedFileInfo getMp3(String url);
+import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
 
-    DownloadedFileInfo getMp4(String url);
+public interface Downloader {
+    DownloadedFile getMp3(String url);
+
+    DownloadedFile getMp4(String url, String quality);
 }

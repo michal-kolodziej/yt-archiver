@@ -1,6 +1,6 @@
 package com.wheeler.ytarchiver;
 
-import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
+import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
 import com.wheeler.ytarchiver.downloader.Downloader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -27,23 +29,23 @@ public class DownloadController {
 
     @GetMapping(value = "/mp3", produces = "audio/mpeg")
     public ResponseEntity<InputStreamResource> getMp3(@RequestParam String url) {
-        DownloadedFileInfo downloadedFileInfo = downloader.getMp3(url);
+        DownloadedFile downloadedFile = downloader.getMp3(url);
         return ResponseEntity.ok()
-                .headers(getAttachmentHeaders(downloadedFileInfo))
-                .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFileInfo.getFile())));
+                .headers(getAttachmentHeaders(downloadedFile))
+                .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFile.getFile())));
     }
 
     @GetMapping(value = "/mp4", produces = "video/mp4")
-    public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url) {
-        DownloadedFileInfo downloadedFileInfo = downloader.getMp4(url);
+    public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url, @RequestParam String quality) {
+        DownloadedFile downloadedFile = downloader.getMp4(url, quality);
         return ResponseEntity.ok()
-                .headers(getAttachmentHeaders(downloadedFileInfo))
-                .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFileInfo.getFile())));
+                .headers(getAttachmentHeaders(downloadedFile))
+                .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFile.getFile())));
     }
 
-    private HttpHeaders getAttachmentHeaders(DownloadedFileInfo downloadedFileInfo) {
+    private HttpHeaders getAttachmentHeaders(DownloadedFile downloadedFile) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadedFileInfo.getOutputFilename());
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(downloadedFile.getOutputFilename(), StandardCharsets.UTF_8));
         return headers;
     }
 
