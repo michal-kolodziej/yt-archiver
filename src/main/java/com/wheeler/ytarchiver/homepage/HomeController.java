@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
@@ -32,7 +33,7 @@ public class HomeController {
     }
 
     @PostMapping("/download/mp4")
-    public String downloadMp4(DownloadFormData downloadFormData) {
+    public String downloadMp4(DownloadFormData downloadFormData, @RequestParam String quality) {
         if (isUrlInvalid(downloadFormData.getUrl())) {
             return "redirect:/home?error=INVALID_URL";
         }

@@ -34,8 +34,8 @@ public class DownloadController {
     }
 
     @GetMapping(value = "/mp4", produces = "video/mp4")
-    public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url) {
-        DownloadedFileInfo downloadedFileInfo = downloader.getMp4(url);
+    public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url, @RequestParam String quality) {
+        DownloadedFileInfo downloadedFileInfo = downloader.getMp4(url, quality);
         return ResponseEntity.ok()
                 .headers(getAttachmentHeaders(downloadedFileInfo))
                 .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFileInfo.getFile())));

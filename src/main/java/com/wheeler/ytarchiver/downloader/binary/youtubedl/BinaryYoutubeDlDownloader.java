@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class BinaryYoutubeDlDownloader implements Downloader {
 
     private final ProcessCommandFactory processCommandFactory;
+    private final VideoQualityService videoQualityService;
 
     @Value("${downloader.binary.download.directory}")
     private final String downloadDirectory;
@@ -27,9 +29,12 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     }
 
     @Override
-    public DownloadedFileInfo getMp4(String url) {
+    public DownloadedFileInfo getMp4(String url, String selectedQuality) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
-        return downloadInternal(processCommandFactory.forMp4(url, fileInfoResolver.getOutputFormat()), fileInfoResolver);
+        String[] processCommand = processCommandFactory.forMp4(url,
+                fileInfoResolver.getOutputFormat(),
+                videoQualityService.getFormatForQuality(selectedQuality));
+        return downloadInternal(processCommand, fileInfoResolver);
     }
 
     private DownloadedFileInfo downloadInternal(String[] args, StartsWithDownloadIdFileInfoResolver fileInfoResolver) {

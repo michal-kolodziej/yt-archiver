@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class DownloadFormData {
     private String url;
+    private String quality;
 }
