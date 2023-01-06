@@ -1,5 +1,7 @@
 package com.wheeler.ytarchiver.downloader;
 
+import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -20,8 +22,8 @@ public class StartsWithDownloadIdFileInfoResolver {
         this.downloadId = UUID.randomUUID().toString();
     }
 
-    public DownloadedFileInfo getFileInfo() {
-        return new DownloadedFileInfo(getFile(), getOutputFilename());
+    public DownloadedFile getFileInfo() {
+        return new DownloadedFile(getFile(), getOutputFilename());
     }
 
     public String getOutputFormat() {
