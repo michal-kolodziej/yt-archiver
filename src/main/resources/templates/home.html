@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="d-flex justify-content-center mt-1 pb-2">
-    <form id="download-form" th:method="post" th:object="${downloadFormData}">
+    <form class="justify-content-center" id="download-form" th:method="post" th:object="${downloadFormData}">
                 <div class="alert alert-danger" id="errorContainer" th:if="${(param.error != null)}">
                     <p th:if="${param.error[0] == 'INVALID_URL'}">Cannot download, given URL is not valid</p>
                 </div>
@@ -22,19 +22,16 @@
 
         <button class="btn btn-primary" th:formaction="@{/download/mp3}" type="submit">Download audio</button>
 
-        <button class="btn btn-primary" th:formaction="@{/download/mp4}" type="submit">Download video</button>
+        <div th:each="videoFormat : ${availableVideoFormats}" class="form-check">
+            <input class="form-check-input" type="radio" name="qualityRadio" th:id="${videoFormat.toString()}" th:field="*{quality}" th:value="${videoFormat.toString()}">
+            <label class="form-check-label" th:for="${videoFormat}" th:text="${videoFormat}">
+            </label>
+        </div>
+
+        <button class="btn btn-primary" th:formaction="@{/download/mp4}" type="submit">Download video (chosen quality)</button>
     </form>
 
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Download video
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" onclick="document.getElementById('download-form').submit();">480p</a>
-            <a class="dropdown-item" onclick="document.getElementById('download-form').submit();">720p</a>
-            <a class="dropdown-item" onclick="document.getElementById('download-form').submit();">best</a>
-        </div>
-    </div>
+
 
 </div>
 

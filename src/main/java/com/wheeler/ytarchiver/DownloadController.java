@@ -2,6 +2,7 @@ package com.wheeler.ytarchiver;
 
 import com.wheeler.ytarchiver.downloader.DownloadedFileInfo;
 import com.wheeler.ytarchiver.downloader.Downloader;
+import com.wheeler.ytarchiver.downloader.binary.youtubedl.VideoQualityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -43,7 +46,7 @@ public class DownloadController {
 
     private HttpHeaders getAttachmentHeaders(DownloadedFileInfo downloadedFileInfo) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadedFileInfo.getOutputFilename());
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(downloadedFileInfo.getOutputFilename(), StandardCharsets.UTF_8));
         return headers;
     }
 
