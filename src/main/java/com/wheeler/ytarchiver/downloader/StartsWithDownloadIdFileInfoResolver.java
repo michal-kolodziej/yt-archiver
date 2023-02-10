@@ -27,7 +27,7 @@ public class StartsWithDownloadIdFileInfoResolver {
     }
 
     public String getOutputFormat() {
-        return downloadDirectory + downloadId + "%(title)s.%(ext)s";
+        return downloadDirectory + File.separator + downloadId + "%(title)s.%(ext)s";
     }
 
     private String getOutputFilename() {
