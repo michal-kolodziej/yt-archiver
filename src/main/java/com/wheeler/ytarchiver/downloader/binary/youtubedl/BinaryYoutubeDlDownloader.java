@@ -4,9 +4,10 @@ import com.wheeler.ytarchiver.downloader.Downloader;
 import com.wheeler.ytarchiver.downloader.StartsWithDownloadIdFileInfoResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     private final ProcessCommandFactory processCommandFactory;
     private final VideoQualityService videoQualityService;
 
-    @Value("${downloader.binary.download.directory}")
-    private final String downloadDirectory;
+    @Qualifier("downloadDirectory")
+    private final File downloadDirectory;
 
     @Override
     public DownloadedFile getMp3(String url) {

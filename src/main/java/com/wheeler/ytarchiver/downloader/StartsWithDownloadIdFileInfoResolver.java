@@ -1,9 +1,9 @@
 package com.wheeler.ytarchiver.downloader;
 
 import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -11,13 +11,13 @@ import java.util.UUID;
 //TODO: some refactoring as i feel this class sucks d(-.-)b
 public class StartsWithDownloadIdFileInfoResolver {
     private final String downloadId;
-    private final String downloadDirectory;
+    @Qualifier("downloadDirectory") private final File downloadDirectory;
 
     private File file;
 
     private boolean isDownloadedFileFound = false;
 
-    public StartsWithDownloadIdFileInfoResolver(String downloadDirectory) {
+    public StartsWithDownloadIdFileInfoResolver(File downloadDirectory) {
         this.downloadDirectory = Objects.requireNonNull(downloadDirectory);
         this.downloadId = UUID.randomUUID().toString();
     }
@@ -44,7 +44,7 @@ public class StartsWithDownloadIdFileInfoResolver {
 
     private void findDownloadedFile() {
         if (isDownloadedFileFound) return;
-        File downloadedFile = Arrays.stream(getFilesInDirectory(downloadDirectory))
+        File downloadedFile = Arrays.stream(getFilesInDownloadDirectory())
                 .filter(file -> file.getName().startsWith(downloadId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("File with downloadId: " + downloadId + " is not present in directory: " + downloadDirectory));
@@ -53,12 +53,7 @@ public class StartsWithDownloadIdFileInfoResolver {
         this.file = downloadedFile;
     }
 
-    private File[] getFilesInDirectory(String downloadDirectory) {
-        File targetDirectory = Paths.get(downloadDirectory).toFile();
-        if (!targetDirectory.isDirectory()) {
-            //TODO: could use more appropriate dedicated exception
-            throw new RuntimeException("file: '" + targetDirectory + "' is not a directory");
-        }
-        return Objects.requireNonNull(targetDirectory.listFiles());
+    private File[] getFilesInDownloadDirectory() {
+        return downloadDirectory.listFiles();
     }
 }
