@@ -2,6 +2,8 @@ package com.wheeler.ytarchiver;
 
 import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
 import com.wheeler.ytarchiver.downloader.Downloader;
+import com.wheeler.ytarchiver.history.DownloadDto;
+import com.wheeler.ytarchiver.history.HistoryTracker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -17,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -26,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
 public class DownloadController {
 
     private final Downloader downloader;
+    private final HistoryTracker historyTracker;
 
     @GetMapping(value = "/mp3", produces = "audio/mpeg")
     public ResponseEntity<InputStreamResource> getMp3(@RequestParam String url) {
@@ -38,6 +42,8 @@ public class DownloadController {
     @GetMapping(value = "/mp4", produces = "video/mp4")
     public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url, @RequestParam String quality) {
         DownloadedFile downloadedFile = downloader.getMp4(url, quality);
+
+        historyTracker.recordDownload(new DownloadDto(url, downloadedFile.getOutputFilename(), quality));
         return ResponseEntity.ok()
                 .headers(getAttachmentHeaders(downloadedFile))
                 .body(new InputStreamResource(wrapInFileDeletingInputStream(downloadedFile.getFile())));
