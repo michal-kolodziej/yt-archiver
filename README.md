@@ -1,10 +1,19 @@
-###Endpoints: 
+# Endpoints:
 - `/` and `/home/` redirects to download page view
-- endpoint `/download/mp3?url=<URL HERE>` is used to download video as MP3
+- Endpoint `/download/mp3?url=<URL HERE>` is used to download video as MP3
 
-##Required properties:
+# Requirements
+You need the latest yt-dlp and ffmpeg to use the app.
 
-### For yt-dl based download
-`downloader.binary.download.directory=` - target temporary download directory
+### FFMPEG
+- When on Linux: `sudo apt install ffmpeg`
+- When on Windows: [Download FFMPEG](https://ffmpeg.org/download.html)
 
-`downloader.binary.youtubedl.path=` - path to yt-dl executable
+### YT-DLP
+Download the latest version from: [YT-DLP Releases](https://github.com/yt-dlp/yt-dlp/releases)  
+Replace it with the existing version in the youtube-dl project folder.
+
+## APP Properties:
+For yt-dl based download:   
+- `downloader.binary.download.directory=` - target temporary download directory  
+- `downloader.binary.youtubedl.path=` - path to yt-dl executable
