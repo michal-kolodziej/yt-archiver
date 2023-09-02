@@ -40,7 +40,6 @@ class YtArchiverApplicationTests {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }

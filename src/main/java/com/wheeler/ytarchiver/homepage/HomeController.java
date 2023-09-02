@@ -2,6 +2,7 @@ package com.wheeler.ytarchiver.homepage;
 
 import com.google.common.base.Strings;
 import com.wheeler.ytarchiver.downloader.binary.youtubedl.VideoQualityService;
+import com.wheeler.ytarchiver.homepage.message.HomepageMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     private final VideoQualityService videoQualityService;
+    private final HomepageMessageService homepageMessageService;
 
     @GetMapping
     public String dispatch() {
@@ -25,6 +27,7 @@ public class HomeController {
     public String home(Model model) {
         model.addAttribute("downloadFormData", new DownloadFormData());
         model.addAttribute("availableVideoFormats", videoQualityService.getAvailableQualities());
+        model.addAttribute("homepageMessages", homepageMessageService.getMessages());
         return "home";
     }
 

@@ -4,6 +4,7 @@ import com.wheeler.ytarchiver.downloader.binary.youtubedl.DownloadedFile;
 import com.wheeler.ytarchiver.downloader.Downloader;
 import com.wheeler.ytarchiver.history.DownloadDto;
 import com.wheeler.ytarchiver.history.HistoryTracker;
+import com.wheeler.ytarchiver.util.CallbackOnCloseFileInputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
@@ -19,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.concurrent.CompletableFuture;
 
 @RestController

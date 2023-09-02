@@ -44,16 +44,12 @@ public class StartsWithDownloadIdFileInfoResolver {
 
     private void findDownloadedFile() {
         if (isDownloadedFileFound) return;
-        File downloadedFile = Arrays.stream(getFilesInDownloadDirectory())
+        File downloadedFile = Arrays.stream(Objects.requireNonNull(downloadDirectory.listFiles()))
                 .filter(file -> file.getName().startsWith(downloadId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("File with downloadId: " + downloadId + " is not present in directory: " + downloadDirectory));
 
         this.isDownloadedFileFound = true;
         this.file = downloadedFile;
-    }
-
-    private File[] getFilesInDownloadDirectory() {
-        return downloadDirectory.listFiles();
     }
 }
