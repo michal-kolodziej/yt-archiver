@@ -32,13 +32,19 @@
         <button class="btn btn-primary" th:formaction="@{/download/mp4}" type="submit">Download video (chosen quality)
         </button>
     </form>
-
-
 </div>
-<div id="messages-container" th:if="${homepageMessages.size > 0}" class="d-flex justify-content-center mt-1 pb-2">
+<br>
+<div class="list-group" th:if="${homepageMessages.size > 0}"
+     style="margin-left: 30%;margin-right: 30%;display: flex;flex-direction: column-reverse;">
     <div th:each="msg : ${homepageMessages}">
-        <h3 th:text="${msg.date}"></h3>
-        <div th:text="${msg.message}"></div>
+        <a class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1" th:text="${msg.header}"/>
+                <small th:text="${msg.date}"/>
+            </div>
+            <p class="mb-1" th:text="${msg.message}"/>
+            <small th:text="${msg.author}"/>
+        </a>
     </div>
 </div>
 </body>
