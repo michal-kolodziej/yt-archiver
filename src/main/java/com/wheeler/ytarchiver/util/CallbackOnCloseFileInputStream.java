@@ -1,4 +1,4 @@
-package com.wheeler.ytarchiver;
+package com.wheeler.ytarchiver.util;
 
 import java.io.File;
 import java.io.FileInputStream;

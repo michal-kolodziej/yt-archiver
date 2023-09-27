@@ -1,0 +1,12 @@
+- date: 12/09/2023
+  header: Nowy programista w zespole
+  message: Do naszego zespołu dołączył nowy programista specjalizujący się w technologiach front-end. Efekty jego pierwszych prac możecie podziwiać jako nowa sekcja wiadomości na stronie. Wkrótce odświeżymy kolejne elementy layoutu witryny. Wypatrujcie ich na naszej stronce.
+  author: Administracja
+- date: 02/09/2023
+  header: Aktualizacja
+  message: Nasze ostatnie chwilowe problemy z pobieraniem zostały rozwiązane. Wszystko powinno już działać elegancko.
+  author: Administracja
+- date: 19/08/2023
+  header: Witamy na naszej potężnej witrynie!
+  message: VPS został przedłużony o 2 lata, więc serwis powinien jeszcze długo i sprawnie śmigać. Pozdrawiam
+  author: Administracja
