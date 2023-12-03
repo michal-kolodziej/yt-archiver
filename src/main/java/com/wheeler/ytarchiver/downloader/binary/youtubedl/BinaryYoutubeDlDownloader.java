@@ -59,17 +59,16 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     }
 
     private void waitForProcessToFinish(Process downloaderProcess) {
-        ProcessOutputReader outputReader = new ProcessOutputReader(downloaderProcess);
         try {
-            checkExitCode(downloaderProcess.waitFor(), outputReader);
+            checkExitCode(downloaderProcess.waitFor());
         } catch (InterruptedException e) {
-            throw new RuntimeException("Error when running youtube-dl process, output: " + outputReader.getOutput(), e);
+            throw new RuntimeException("Error when running youtube-dl process");
         }
     }
 
-    private void checkExitCode(int exitCode, ProcessOutputReader processOutputReader) {
+    private void checkExitCode(int exitCode) {
         if (exitCode != 0) {
-            throw new RuntimeException("Process exit code wasn't 0, output: " + processOutputReader.getOutput());
+            throw new RuntimeException("Process exit code wasn't 0");
         }
     }
 
