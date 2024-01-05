@@ -11,14 +11,11 @@ import java.io.File;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@Component
 @Slf4j
 public class BinaryYoutubeDlDownloader implements Downloader {
 
     private final ProcessCommandFactory processCommandFactory;
     private final VideoQualityService videoQualityService;
-
-    @Qualifier("downloadDirectory")
     private final File downloadDirectory;
 
     @Override
