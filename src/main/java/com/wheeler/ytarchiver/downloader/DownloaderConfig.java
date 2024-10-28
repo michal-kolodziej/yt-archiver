@@ -17,8 +17,9 @@ public class DownloaderConfig {
     Downloader downloader(ProcessCommandFactory processCommandFactory,
                           VideoQualityService videoQualityService,
                           @Qualifier("downloadDirectory") File downloadDirectory,
-                          HistoryTracker historyTracker) {
-        var binaryYoutubeDlDownloader = new BinaryYoutubeDlDownloader(processCommandFactory, videoQualityService, downloadDirectory);
+                          HistoryTracker historyTracker,
+                          @Value("${downloader.binary.always-log-yt-dlp-output}") boolean alwaysLogYtDlpOutput) {
+        var binaryYoutubeDlDownloader = new BinaryYoutubeDlDownloader(processCommandFactory, videoQualityService, downloadDirectory, alwaysLogYtDlpOutput);
         return new HistoryTrackingDownloaderProxy(binaryYoutubeDlDownloader, historyTracker);
     }
 }

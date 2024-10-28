@@ -18,6 +18,7 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     private final ProcessCommandFactory processCommandFactory;
     private final VideoQualityService videoQualityService;
     private final File downloadDirectory;
+    private final boolean alwaysLogYtDlpOutput;
 
     @Override
     public DownloadedFile getMp3(String url) {
@@ -57,7 +58,7 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     }
 
     private void waitForProcessToFinish(Process downloaderProcess) {
-        ProcessOutputReader outputReader = new ProcessOutputReader(downloaderProcess);
+        ProcessOutputReader outputReader = new ProcessOutputReader(downloaderProcess, alwaysLogYtDlpOutput);
         try {
             checkExitCode(downloaderProcess.waitFor(), outputReader);
         } catch (InterruptedException e) {

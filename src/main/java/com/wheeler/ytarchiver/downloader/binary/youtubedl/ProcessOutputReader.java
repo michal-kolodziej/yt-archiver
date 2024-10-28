@@ -11,12 +11,15 @@ public class ProcessOutputReader {
 
     private final StringBuilder outputBuilder = new StringBuilder();
 
-    public ProcessOutputReader(Process downloaderProcess) {
+    public ProcessOutputReader(Process downloaderProcess, boolean alwaysLogYtDlpOutput) {
         BufferedReader stdInput = new BufferedReader(new
                 InputStreamReader(downloaderProcess.getInputStream()));
         String line;
         try {
             while ((line = stdInput.readLine()) != null) {
+                if (alwaysLogYtDlpOutput) {
+                    log.info(line);
+                }
                 outputBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
@@ -24,7 +27,7 @@ public class ProcessOutputReader {
         }
     }
 
-    public String getOutput(){
+    public String getOutput() {
         return outputBuilder.toString();
     }
 }
