@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,6 +30,7 @@ public class HomepageMessageService {
         try {
             messages = mapper.readValue(messagesFileResource.getURL(), new TypeReference<>() {
             });
+            messages.sort(Comparator.comparing(HomepageMessage::getDate));
         } catch (IOException e) {
             log.error("Unable to open homepage-messages file, assigning empty list:", e);
             messages = Collections.emptyList();
