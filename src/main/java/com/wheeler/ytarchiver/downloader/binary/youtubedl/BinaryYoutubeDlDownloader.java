@@ -5,31 +5,46 @@ import com.wheeler.ytarchiver.downloader.StartsWithDownloadIdFileInfoResolver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Component
 @Slf4j
 public class BinaryYoutubeDlDownloader implements Downloader {
 
     private final ProcessCommandFactory processCommandFactory;
     private final VideoQualityService videoQualityService;
+
+    @Qualifier("downloadDirectory")
     private final File downloadDirectory;
+
+    @Value("${downloader.binary.cookies.enabled}")
+    private final boolean cookiesEnabled;
+
+    @Value("${downloader.binary.cookies.path}")
+    private final String cookiesPath;
 
     @Override
     public DownloadedFile getMp3(String url) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
-        return downloadInternal(processCommandFactory.forMp3(url, fileInfoResolver.getOutputFormat()), fileInfoResolver);
+        return downloadInternal(
+                processCommandFactory.forMp3(url, fileInfoResolver.getOutputFormat())
+                        .addCookies(cookiesEnabled, cookiesPath)
+                        .build()
+                , fileInfoResolver);
     }
 
     @Override
     public DownloadedFile getMp4(String url, String selectedQuality) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
-        String[] processCommand = processCommandFactory.forMp4(url,
-                fileInfoResolver.getOutputFormat(),
-                videoQualityService.getFormatForQuality(selectedQuality));
+        String[] processCommand = processCommandFactory.forMp4(url, fileInfoResolver.getOutputFormat(),
+                videoQualityService.getFormatForQuality(selectedQuality))
+                .addCookies(cookiesEnabled, cookiesPath)
+                .build();
         return downloadInternal(processCommand, fileInfoResolver);
     }
 
