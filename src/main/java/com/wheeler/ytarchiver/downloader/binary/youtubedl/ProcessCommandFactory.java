@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-
 @RequiredArgsConstructor
 @Component
 public class ProcessCommandFactory {
@@ -15,24 +14,33 @@ public class ProcessCommandFactory {
     @Value("${downloader.binary.youtubedl.path}")
     private final String binaryPath;
 
+    @Value("${downloader.binary.cookies.enabled}")
+    private final boolean cookiesEnabled;
 
-    public ProcessCommandBuilder forMp3(String url, String filenameFormat) {
+    @Value("${downloader.binary.cookies.path}")
+    private final String cookiesPath;
+
+    public String[] forMp3(String url, String filenameFormat) {
         return new ProcessCommandBuilder(
                 new String[]{
                         binaryPath,
                         "--extract-audio",
                         "--audio-format", "mp3",
                         "--output", filenameFormat,
-                        url});
+                        url})
+                .addCookies(cookiesEnabled, cookiesPath)
+                .build();
     }
 
-    public ProcessCommandBuilder forMp4(String url, String filenameFormat, String videoFormat) {
+    public String[] forMp4(String url, String filenameFormat, String videoFormat) {
         return new ProcessCommandBuilder(
                 new String[]{binaryPath,
                         "--output", filenameFormat,
                         "-S", "ext:mp4:m4a",
                         "--format", videoFormat,
-                        url});
+                        url})
+                .addCookies(cookiesEnabled, cookiesPath)
+                .build();
     }
 
     static class ProcessCommandBuilder {

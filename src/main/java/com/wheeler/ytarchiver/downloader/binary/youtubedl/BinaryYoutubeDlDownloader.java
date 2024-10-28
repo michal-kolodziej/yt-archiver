@@ -32,19 +32,14 @@ public class BinaryYoutubeDlDownloader implements Downloader {
     public DownloadedFile getMp3(String url) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
         return downloadInternal(
-                processCommandFactory.forMp3(url, fileInfoResolver.getOutputFormat())
-                        .addCookies(cookiesEnabled, cookiesPath)
-                        .build()
-                , fileInfoResolver);
+                processCommandFactory.forMp3(url, fileInfoResolver.getOutputFormat()), fileInfoResolver);
     }
 
     @Override
     public DownloadedFile getMp4(String url, String selectedQuality) {
         var fileInfoResolver = new StartsWithDownloadIdFileInfoResolver(downloadDirectory);
         String[] processCommand = processCommandFactory.forMp4(url, fileInfoResolver.getOutputFormat(),
-                videoQualityService.getFormatForQuality(selectedQuality))
-                .addCookies(cookiesEnabled, cookiesPath)
-                .build();
+                videoQualityService.getFormatForQuality(selectedQuality));
         return downloadInternal(processCommand, fileInfoResolver);
     }
 
