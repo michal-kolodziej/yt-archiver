@@ -29,10 +29,10 @@ import java.util.concurrent.CompletableFuture;
 public class DownloadController {
 
     private final Downloader downloader;
-    private final HistoryTracker historyTracker;
 
     @GetMapping(value = "/mp3", produces = "audio/mpeg")
     public ResponseEntity<InputStreamResource> getMp3(@RequestParam String url) {
+        log.info("endpoint /api/download/mp3 was called with url " + url);
         DownloadedFile downloadedFile = downloader.getMp3(url);
         return ResponseEntity.ok()
                 .headers(getAttachmentHeaders(downloadedFile))
@@ -41,6 +41,7 @@ public class DownloadController {
 
     @GetMapping(value = "/mp4", produces = "video/mp4")
     public ResponseEntity<InputStreamResource> getMp4(@RequestParam String url, @RequestParam String quality) {
+        log.info("endpoint /api/download/mp4 was called with url " + url);
         DownloadedFile downloadedFile = downloader.getMp4(url, quality);
         return ResponseEntity.ok()
                 .headers(getAttachmentHeaders(downloadedFile))

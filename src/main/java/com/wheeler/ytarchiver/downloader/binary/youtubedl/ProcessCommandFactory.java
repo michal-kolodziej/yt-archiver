@@ -17,6 +17,9 @@ public class ProcessCommandFactory {
     @Value("${downloader.binary.cookies.enabled}")
     private final boolean cookiesEnabled;
 
+    @Value("${downloader.binary.netrc.enabled}")
+    private final boolean netrcEnabled;
+
     @Value("${downloader.binary.cookies.path}")
     private final String cookiesPath;
 
@@ -29,6 +32,7 @@ public class ProcessCommandFactory {
                         "--output", filenameFormat,
                         url})
                 .addCookies(cookiesEnabled, cookiesPath)
+                .netrc(netrcEnabled)
                 .build();
     }
 
@@ -40,6 +44,7 @@ public class ProcessCommandFactory {
                         "--format", videoFormat,
                         url})
                 .addCookies(cookiesEnabled, cookiesPath)
+                .netrc(netrcEnabled)
                 .build();
     }
 
@@ -60,6 +65,15 @@ public class ProcessCommandFactory {
                 List<String> argsList = new ArrayList<>(List.of(args));
                 argsList.add("--cookies");
                 argsList.add(cookiesPath);
+                this.args = argsList.toArray(new String[0]);
+            }
+            return this;
+        }
+
+        ProcessCommandBuilder netrc(boolean netrcEnabled){
+            if(netrcEnabled){
+                List<String> argsList = new ArrayList<>(List.of(args));
+                argsList.add("--netrc");
                 this.args = argsList.toArray(new String[0]);
             }
             return this;
