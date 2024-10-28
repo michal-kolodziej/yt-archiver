@@ -1,11 +1,11 @@
 package com.wheeler.ytarchiver.downloader.binary.youtubedl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Component
@@ -20,6 +20,9 @@ public class ProcessCommandFactory {
     @Value("${downloader.binary.netrc.enabled}")
     private final boolean netrcEnabled;
 
+    @Value("${downloader.binary.oauth.enabled}")
+    private final boolean oAuthEnabled;
+
     @Value("${downloader.binary.cookies.path}")
     private final String cookiesPath;
 
@@ -32,7 +35,7 @@ public class ProcessCommandFactory {
                         "--output", filenameFormat,
                         url})
                 .addCookies(cookiesEnabled, cookiesPath)
-                .netrc(netrcEnabled)
+                .oAuth(oAuthEnabled, netrcEnabled)
                 .build();
     }
 
@@ -44,7 +47,7 @@ public class ProcessCommandFactory {
                         "--format", videoFormat,
                         url})
                 .addCookies(cookiesEnabled, cookiesPath)
-                .netrc(netrcEnabled)
+                .oAuth(oAuthEnabled, netrcEnabled)
                 .build();
     }
 
@@ -60,8 +63,8 @@ public class ProcessCommandFactory {
             return this.args;
         }
 
-        ProcessCommandBuilder addCookies(boolean cookiesEnabled, String cookiesPath){
-            if(cookiesEnabled){
+        ProcessCommandBuilder addCookies(boolean cookiesEnabled, String cookiesPath) {
+            if (cookiesEnabled) {
                 List<String> argsList = new ArrayList<>(List.of(args));
                 argsList.add("--cookies");
                 argsList.add(cookiesPath);
@@ -70,12 +73,16 @@ public class ProcessCommandFactory {
             return this;
         }
 
-        ProcessCommandBuilder netrc(boolean netrcEnabled){
-            if(netrcEnabled){
-                List<String> argsList = new ArrayList<>(List.of(args));
+        ProcessCommandBuilder oAuth(boolean oauthEnabled, boolean netrcEnabled) {
+            List<String> argsList = new ArrayList<>(List.of(args));
+            if (netrcEnabled) {
                 argsList.add("--netrc");
-                this.args = argsList.toArray(new String[0]);
             }
+            if (oauthEnabled) {
+                argsList.add("--username=oauth");
+                argsList.add("--password=\"\"");
+            }
+            this.args = argsList.toArray(new String[0]);
             return this;
         }
     }
