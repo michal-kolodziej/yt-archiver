@@ -17,7 +17,7 @@ public class ProcessOutputReader {
         String line;
         try {
             while ((line = stdInput.readLine()) != null) {
-                outputBuilder.append(line);
+                outputBuilder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to read process output", e);

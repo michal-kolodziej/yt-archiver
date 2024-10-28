@@ -2,8 +2,8 @@ package com.wheeler.ytarchiver.history;
 
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
-import java.util.List;
 
 @Component
 public class HistoryTracker {
@@ -17,7 +17,10 @@ public class HistoryTracker {
         lastDownloads.addFirst(downloadDto);
     }
 
-    public List<DownloadDto> getHistory() {
-        return lastDownloads;
+    public HistoryDto getHistory() {
+        long downloadsInLast7Days = lastDownloads.stream()
+                .filter(dl -> dl.getDownloadDate().isAfter(LocalDateTime.now().minusDays(7)))
+                .count();
+        return new HistoryDto(downloadsInLast7Days, lastDownloads);
     }
 }
