@@ -26,6 +26,9 @@ public class ProcessCommandFactory {
     @Value("${downloader.binary.cookies.path}")
     private final String cookiesPath;
 
+    @Value("${downloader.binary.cache-dir.path:#{null}}")
+    private final String cacheDirPath;
+
     public String[] forMp3(String url, String filenameFormat) {
         return new ProcessCommandBuilder(
                 new String[]{
@@ -34,8 +37,9 @@ public class ProcessCommandFactory {
                         "--audio-format", "mp3",
                         "--output", filenameFormat,
                         url})
-                .addCookies(cookiesEnabled, cookiesPath)
+                .cookies(cookiesEnabled, cookiesPath)
                 .oAuth(oAuthEnabled, netrcEnabled)
+                .cacheDir(cacheDirPath)
                 .build();
     }
 
@@ -46,8 +50,9 @@ public class ProcessCommandFactory {
                         "-S", "ext:mp4:m4a",
                         "--format", videoFormat,
                         url})
-                .addCookies(cookiesEnabled, cookiesPath)
+                .cookies(cookiesEnabled, cookiesPath)
                 .oAuth(oAuthEnabled, netrcEnabled)
+                .cacheDir(cacheDirPath)
                 .build();
     }
 
@@ -63,11 +68,21 @@ public class ProcessCommandFactory {
             return this.args;
         }
 
-        ProcessCommandBuilder addCookies(boolean cookiesEnabled, String cookiesPath) {
+        ProcessCommandBuilder cookies(boolean cookiesEnabled, String cookiesPath) {
             if (cookiesEnabled) {
                 List<String> argsList = new ArrayList<>(List.of(args));
                 argsList.add("--cookies");
                 argsList.add(cookiesPath);
+                this.args = argsList.toArray(new String[0]);
+            }
+            return this;
+        }
+
+        ProcessCommandBuilder cacheDir(String cacheDirPath) {
+            if (cacheDirPath != null) {
+                List<String> argsList = new ArrayList<>(List.of(args));
+                argsList.add("--cache-dir");
+                argsList.add(cacheDirPath);
                 this.args = argsList.toArray(new String[0]);
             }
             return this;
