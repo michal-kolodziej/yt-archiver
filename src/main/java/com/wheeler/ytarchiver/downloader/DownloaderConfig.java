@@ -5,6 +5,7 @@ import com.wheeler.ytarchiver.downloader.binary.youtubedl.ProcessCommandFactory;
 import com.wheeler.ytarchiver.downloader.binary.youtubedl.VideoQualityService;
 import com.wheeler.ytarchiver.history.HistoryTracker;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
