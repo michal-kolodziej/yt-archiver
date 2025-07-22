@@ -1,3 +1,6 @@
+# About
+yt-archiver is a proxy for yt-dlp that allows hosting youtube (and other sites) downloader as a web application. It utilizes Java and Spring framework.
+
 # Endpoints:
 - `/` and `/home/` redirects to download page view
 - Endpoint `/download/mp3?url=<URL HERE>` is used to download video as MP3
